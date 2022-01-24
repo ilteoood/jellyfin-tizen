@@ -34,16 +34,17 @@ jobs:
           git clone https://github.com/jellyfin/jellyfin-tizen.git
           cd jellyfin-tizen
           JELLYFIN_WEB_DIR=../jellyfin-web/dist yarn install
-      - name: Create Tizen certificate
+      - name: Extract sign certificate
         run: |
-          export PATH=$PATH:$HOME/tizen-studio/tools/ide/bin
-          tizen certificate -a jellyfin -p jellyfin
+          pip install gdown
+          gdown --id ${{ secrets.CERTIFICATE_LOCATION }}
+          unzip SamsungCertificate.zip -d $HOME/SamsungCertificate
       - name: Run Tizen CLI build
         run: |
           cd jellyfin-tizen
           export PATH=$PATH:$HOME/tizen-studio/tools/ide/bin
           tizen build-web -e ".*" -e gulpfile.js -e README.md -e "node_modules/*" -e "package*.json" -e "yarn.lock"
-          tizen package -t wgt -o . -- .buildResult -s jellyfin
+          tizen package -t wgt -o . -- .buildResult -s Jellyfin
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
