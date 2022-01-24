@@ -29,7 +29,6 @@ jobs:
           cd jellyfin-web
           git checkout be195b0
           yarn install --frozen-lockfile
-          cd ..
       - name: Prepare Jellyfin Tizen
         run: |
           git clone https://github.com/jellyfin/jellyfin-tizen.git
@@ -41,6 +40,7 @@ jobs:
           tizen certificate -a jellyfin -p jellyfin
       - name: Run Tizen CLI build
         run: |
+          cd jellyfin-tizen
           export PATH=$PATH:$HOME/tizen-studio/tools/ide/bin
           tizen build-web -e ".*" -e gulpfile.js -e README.md -e "node_modules/*" -e "package*.json" -e "yarn.lock"
           tizen package -t wgt -o . -- .buildResult -s jellyfin
