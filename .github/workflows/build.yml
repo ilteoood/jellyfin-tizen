@@ -28,6 +28,7 @@ jobs:
         run: |
           git clone https://github.com/jellyfin/jellyfin-web.git
           cd jellyfin-web
+          git checkout be195b0
           yarn install --frozen-lockfile
       - name: Prepare Jellyfin Tizen
         run: |
