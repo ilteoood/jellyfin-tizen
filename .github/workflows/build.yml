@@ -13,7 +13,7 @@ jobs:
       - name: Install Tizen Studio
         run: |
           sudo apt update
-          sudo apt install -y pciutils zip libncurses5 python libpython2.7 gnome-keyring
+          sudo apt install -y pciutils zip libncurses5 python libpython2.7
           sudo apt clean
           curl https://usa.sdk-dl.tizen.org/web-cli_Tizen_Studio_4.5.1_usa_ubuntu-64.bin -o install.bin
           chmod a+x install.bin
@@ -32,6 +32,8 @@ jobs:
         run: |
           export PATH=$PATH:$HOME/tizen-studio/tools/ide/bin
           tizen security-profiles add -A -a $HOME/SamsungCertificate/jellyfin/author.p12 -d $HOME/SamsungCertificate/jellyfin/distributor.p12 -n jellyfin -p ${{ secrets.CERTIFICATE_PASSWORD }} -dp ${{ secrets.CERTIFICATE_PASSWORD }}
+          sed -i "s/password=\".*\"/password=\"${{ secrets.CERTIFICATE_PASSWORD }}\"/g" $HOME/tizen-studio-data/profile/profiles.xml
+          echo $HOME/tizen-studio-data/profile/profiles.xml
       - name: Prepare Jellyfin Web
         run: |
           git clone https://github.com/jellyfin/jellyfin-web.git
