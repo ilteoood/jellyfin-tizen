@@ -33,7 +33,6 @@ jobs:
           export PATH=$PATH:$HOME/tizen-studio/tools/ide/bin
           tizen security-profiles add -A -a $HOME/SamsungCertificate/jellyfin/author.p12 -d $HOME/SamsungCertificate/jellyfin/distributor.p12 -n jellyfin -p ${{ secrets.CERTIFICATE_PASSWORD }} -dp ${{ secrets.CERTIFICATE_PASSWORD }}
           sed -i "s/password=\".*\"/password=\"${{ secrets.CERTIFICATE_PASSWORD }}\"/g" $HOME/tizen-studio-data/profile/profiles.xml
-          cat $HOME/tizen-studio-data/profile/profiles.xml
       - name: Prepare Jellyfin Web
         run: |
           git clone https://github.com/jellyfin/jellyfin-web.git
@@ -47,6 +46,8 @@ jobs:
           JELLYFIN_WEB_DIR=../jellyfin-web/dist yarn install
       - name: Insert devices DUID
         run: |
+          pwd
+          ls -la
           export TV_DUID=$(cat /home/runner/work/jellyfin-tizen/jellyfin-tizen/tv-duid.txt | while read line || [[ -n $line ]]; do echo -n "<TestDevice>$line</TestDevice>"; done | sed 's/\//\\\//g')
           sed -i "s/<TestDevice>AABCD<\/TestDevice>/$TV_DUID/g" $HOME/SamsungCertificate/jellyfin/device-profile.xml
       - name: Run Tizen CLI build
