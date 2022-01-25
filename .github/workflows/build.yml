@@ -34,11 +34,15 @@ jobs:
           git clone https://github.com/jellyfin/jellyfin-tizen.git
           cd jellyfin-tizen
           JELLYFIN_WEB_DIR=../jellyfin-web/dist yarn install
-      - name: Extract sign certificate
+      - name: Manage sign certificate
         run: |
+          export REPLACE_PATH=$(echo $HOME | sed 's/\//\\\//g')
+          export PATH=$PATH:$HOME/tizen-studio/tools/ide/bin
           pip install gdown
           gdown --id ${{ secrets.CERTIFICATE_LOCATION }}
-          unzip SamsungCertificate.zip -d $HOME/SamsungCertificate
+          unzip SamsungCertificate.zip
+          sed -i "s/\/home\/ilteoood/$REPLACE_PATH/g" ./profile/profiles.xml
+          mv ./profile $HOME/tizen-studio-data
       - name: Run Tizen CLI build
         run: |
           cd jellyfin-tizen
