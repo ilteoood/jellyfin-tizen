@@ -23,6 +23,17 @@ jobs:
         run: |
           $HOME/tizen-studio/package-manager/package-manager-cli.bin install \
           Certificate-Manager NativeCLI cert-add-on --accept-license
+      - name: Manage sign certificate
+        run: |
+          export REPLACE_PATH=$(echo $HOME | sed 's/\//\\\//g')
+          export PATH=$PATH:$HOME/tizen-studio/tools/ide/bin
+          export TV_DUID=$(cat ./jellyfin-tizen/tv-duid.txt | while read line || [[ -n $line ]]; do echo -n "<TestDevice>$line</TestDevice>"; done | sed 's/\//\\\//g')
+          pip install gdown
+          gdown --id ${{ secrets.CERTIFICATE_LOCATION }}
+          unzip tizen-certificates.zip -d $HOME
+          sed -i "s/\/home\/ilteoood/$REPLACE_PATH/g" $HOME/profile/profiles.xml
+          mv $HOME/profile $HOME/tizen-studio-data
+          sed -i "s/<TestDevice>AABCD<\/TestDevice>/$TV_DUID/g" $HOME/SamsungCertificate/jellyfin/device-profile.xml
       - name: Prepare Jellyfin Web
         run: |
           git clone https://github.com/jellyfin/jellyfin-web.git
@@ -34,20 +45,6 @@ jobs:
           git clone https://github.com/ilteoood/jellyfin-tizen.git
           cd jellyfin-tizen
           JELLYFIN_WEB_DIR=../jellyfin-web/dist yarn install
-      - name: Manage sign certificate
-        run: |
-          export REPLACE_PATH=$(echo $HOME | sed 's/\//\\\//g')
-          export PATH=$PATH:$HOME/tizen-studio/tools/ide/bin
-          export TV_DUID=$(cat ./jellyfin-tizen/tv-duid.txt | while read line || [[ -n $line ]]; do echo -n "<TestDevice>$line</TestDevice>"; done)
-          pip install gdown
-          gdown --id ${{ secrets.CERTIFICATE_LOCATION }}
-          unzip tizen-certificates.zip
-          sed -i "s/\/home\/ilteoood/$REPLACE_PATH/g" ./profile/profiles.xml
-          mv ./profile $HOME/tizen-studio-data
-          pwd
-          ls -la
-          ls -la ./SamsungCertificate
-          sed -i "s/<TestDevice>AABCD<\/TestDevice>/$TV_DUID/g" $HOME/SamsungCertificate/jellyfin/device-profile.xml
       - name: Run Tizen CLI build
         run: |
           cd jellyfin-tizen
