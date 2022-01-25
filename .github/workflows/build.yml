@@ -44,6 +44,9 @@ jobs:
           unzip tizen-certificates.zip
           sed -i "s/\/home\/ilteoood/$REPLACE_PATH/g" ./profile/profiles.xml
           mv ./profile $HOME/tizen-studio-data
+          pwd
+          ls -la
+          ls -la ./SamsungCertificate
           sed -i "s/<TestDevice>AABCD<\/TestDevice>/$TV_DUID/g" $HOME/SamsungCertificate/jellyfin/device-profile.xml
       - name: Run Tizen CLI build
         run: |
