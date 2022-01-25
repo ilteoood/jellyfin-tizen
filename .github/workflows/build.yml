@@ -40,7 +40,7 @@ jobs:
           export PATH=$PATH:$HOME/tizen-studio/tools/ide/bin
           pip install gdown
           gdown --id ${{ secrets.CERTIFICATE_LOCATION }}
-          unzip SamsungCertificate.zip
+          unzip tizen-certificates.zip
           sed -i "s/\/home\/ilteoood/$REPLACE_PATH/g" ./profile/profiles.xml
           mv ./profile $HOME/tizen-studio-data
       - name: Run Tizen CLI build
