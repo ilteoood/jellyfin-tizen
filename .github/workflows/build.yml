@@ -57,3 +57,4 @@ jobs:
         with:
           name: jellyfin-10.7.7
           path: ./jellyfin-tizen/Jellyfin.wgt
+          if-no-files-found: error
