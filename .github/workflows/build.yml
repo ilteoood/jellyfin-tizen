@@ -49,6 +49,7 @@ jobs:
         run: |
           cd jellyfin-tizen
           export PATH=$PATH:$HOME/tizen-studio/tools/ide/bin
+          tizen security-profiles set-active -n jellyfin
           tizen build-web -e ".*" -e gulpfile.js -e README.md -e "node_modules/*" -e "package*.json" -e "yarn.lock"
           tizen package -t wgt -o . -- .buildResult -s Jellyfin
       - name: Upload artifacts
