@@ -23,7 +23,7 @@ jobs:
         run: |
           $HOME/tizen-studio/package-manager/package-manager-cli.bin install \
           Certificate-Manager NativeCLI cert-add-on --accept-license
-      - name: Manage sign certificate
+      - name: Manage author and distribution certificate
         run: |
           export REPLACE_PATH=$(echo $HOME | sed 's/\//\\\//g')
           export PATH=$PATH:$HOME/tizen-studio/tools/ide/bin
@@ -49,6 +49,7 @@ jobs:
         run: |
           cd jellyfin-tizen
           export PATH=$PATH:$HOME/tizen-studio/tools/ide/bin
+          tizen certificate -a jellyfin -p jellyfin
           tizen security-profiles set-active -n jellyfin
           tizen build-web -e ".*" -e gulpfile.js -e README.md -e "node_modules/*" -e "package*.json" -e "yarn.lock"
           tizen package -t wgt -o . -- .buildResult -s Jellyfin
