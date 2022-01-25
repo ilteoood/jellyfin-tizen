@@ -33,7 +33,7 @@ jobs:
           export PATH=$PATH:$HOME/tizen-studio/tools/ide/bin
           tizen security-profiles add -A -a $HOME/SamsungCertificate/jellyfin/author.p12 -d $HOME/SamsungCertificate/jellyfin/distributor.p12 -n jellyfin -p ${{ secrets.CERTIFICATE_PASSWORD }} -dp ${{ secrets.CERTIFICATE_PASSWORD }}
           sed -i "s/password=\".*\"/password=\"${{ secrets.CERTIFICATE_PASSWORD }}\"/g" $HOME/tizen-studio-data/profile/profiles.xml
-          echo $HOME/tizen-studio-data/profile/profiles.xml
+          cat $HOME/tizen-studio-data/profile/profiles.xml
       - name: Prepare Jellyfin Web
         run: |
           git clone https://github.com/jellyfin/jellyfin-web.git
