@@ -13,7 +13,7 @@ jobs:
       - name: Install Tizen Studio
         run: |
           sudo apt update
-          sudo apt install -y pciutils zip libncurses5 python libpython2.7
+          sudo apt install -y pciutils zip libncurses5 python libpython2.7 gnome-keyring
           sudo apt clean
           curl https://usa.sdk-dl.tizen.org/web-cli_Tizen_Studio_4.5.1_usa_ubuntu-64.bin -o install.bin
           chmod a+x install.bin
