@@ -28,10 +28,6 @@ jobs:
           pip install gdown
           gdown --id ${{ secrets.CERTIFICATE_LOCATION }}
           unzip SamsungCertificate.zip -d $HOME
-      - name: Insert devices DUID
-        run: |
-          export TV_DUID=$(cat ./jellyfin-tizen/tv-duid.txt | while read line || [[ -n $line ]]; do echo -n "<TestDevice>$line</TestDevice>"; done | sed 's/\//\\\//g')
-          sed -i "s/<TestDevice>AABCD<\/TestDevice>/$TV_DUID/g" $HOME/SamsungCertificate/jellyfin/device-profile.xml
       - name: Register author and distributor certificates
         run: |
           export PATH=$PATH:$HOME/tizen-studio/tools/ide/bin
@@ -47,6 +43,10 @@ jobs:
           git clone https://github.com/ilteoood/jellyfin-tizen.git
           cd jellyfin-tizen
           JELLYFIN_WEB_DIR=../jellyfin-web/dist yarn install
+      - name: Insert devices DUID
+        run: |
+          export TV_DUID=$(cat ./jellyfin-tizen/tv-duid.txt | while read line || [[ -n $line ]]; do echo -n "<TestDevice>$line</TestDevice>"; done | sed 's/\//\\\//g')
+          sed -i "s/<TestDevice>AABCD<\/TestDevice>/$TV_DUID/g" $HOME/SamsungCertificate/jellyfin/device-profile.xml
       - name: Run Tizen CLI build
         run: |
           cd jellyfin-tizen
@@ -54,6 +54,10 @@ jobs:
           tizen cli-config "profiles.path=$HOME/tizen-studio-data/profile/profiles.xml"
           tizen build-web -e ".*" -e gulpfile.js -e README.md -e "node_modules/*" -e "package*.json" -e "yarn.lock" -e "tv-duid.txt"
           tizen package -t wgt -o . -- .buildResult -s jellyfin
+      - name: Failure
+        if: failure()
+        run: |
+          cat $HOME/tizen-studio-data/cli/logs/cli.log
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
