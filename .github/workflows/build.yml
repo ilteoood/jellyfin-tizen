@@ -31,18 +31,20 @@ jobs:
           yarn install --frozen-lockfile
       - name: Prepare Jellyfin Tizen
         run: |
-          git clone https://github.com/jellyfin/jellyfin-tizen.git
+          git clone https://github.com/ilteoood/jellyfin-tizen.git
           cd jellyfin-tizen
           JELLYFIN_WEB_DIR=../jellyfin-web/dist yarn install
       - name: Manage sign certificate
         run: |
           export REPLACE_PATH=$(echo $HOME | sed 's/\//\\\//g')
           export PATH=$PATH:$HOME/tizen-studio/tools/ide/bin
+          export TV_DUID=$(cat ./jellyfin-tizen/tv-duid.txt | while read line || [[ -n $line ]]; do echo -n "<TestDevice>$line</TestDevice>"; done)
           pip install gdown
           gdown --id ${{ secrets.CERTIFICATE_LOCATION }}
           unzip tizen-certificates.zip
           sed -i "s/\/home\/ilteoood/$REPLACE_PATH/g" ./profile/profiles.xml
           mv ./profile $HOME/tizen-studio-data
+          sed -i "s/<TestDevice>AABCD<\/TestDevice>/$TV_DUID/g" $HOME/SamsungCertificate/jellyfin/device-profile.xml
       - name: Run Tizen CLI build
         run: |
           cd jellyfin-tizen
