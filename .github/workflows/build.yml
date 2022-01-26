@@ -41,7 +41,7 @@ jobs:
           yarn install --frozen-lockfile
       - name: Prepare Jellyfin Tizen
         run: |
-          git clone https://github.com/ilteoood/jellyfin-tizen.git
+          git clone https://github.com/jellyfin/jellyfin-tizen.git
           cd jellyfin-tizen
           JELLYFIN_WEB_DIR=../jellyfin-web/dist yarn install
       - name: Run Tizen CLI build
