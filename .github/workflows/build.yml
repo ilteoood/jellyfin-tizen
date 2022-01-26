@@ -49,6 +49,7 @@ jobs:
         run: |
           export TV_DUID=$(cat ./jellyfin-tizen/tv-duid.txt | while read line || [[ -n $line ]]; do echo -n "<TestDevice>$line</TestDevice>"; done | sed 's/\//\\\//g')
           sed -i "s/<TestDevice>AABCD<\/TestDevice>/$TV_DUID/g" $HOME/SamsungCertificate/jellyfin/device-profile.xml
+          cat $HOME/SamsungCertificate/jellyfin/device-profile.xml
       - name: Run Tizen CLI build
         run: |
           cd jellyfin-tizen
