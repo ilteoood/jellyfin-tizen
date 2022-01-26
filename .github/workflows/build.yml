@@ -39,6 +39,7 @@ jobs:
           cd jellyfin-tizen
           export PATH=$PATH:$HOME/tizen-studio/tools/ide/bin
           tizen build-web -e ".*" -e gulpfile.js -e README.md -e "node_modules/*" -e "package*.json" -e "yarn.lock"
+          tizen certificate -a test -f test -n test -p testtest
           tizen package -t wgt -o . -- .buildResult
       - name: Failure
         if: failure()
