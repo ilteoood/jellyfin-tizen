@@ -43,18 +43,12 @@ jobs:
         run: |
           git clone https://github.com/ilteoood/jellyfin-tizen.git
           cd jellyfin-tizen
-          git checkout feat/gh_action
           JELLYFIN_WEB_DIR=../jellyfin-web/dist yarn install
-      - name: Insert devices DUID
-        run: |
-          export TV_DUID=$(cat ./jellyfin-tizen/tv-duid.txt | while read line || [[ -n $line ]]; do echo -n "<TestDevice>$line</TestDevice>"; done | sed 's/\//\\\//g')
-          sed -i "s/<TestDevice>AABCD<\/TestDevice>/$TV_DUID/g" $HOME/SamsungCertificate/jellyfin/device-profile.xml
-          cat $HOME/SamsungCertificate/jellyfin/device-profile.xml
       - name: Run Tizen CLI build
         run: |
           cd jellyfin-tizen
           export PATH=$PATH:$HOME/tizen-studio/tools/ide/bin
-          tizen build-web -e ".*" -e gulpfile.js -e README.md -e "node_modules/*" -e "package*.json" -e "yarn.lock" -e "tv-duid.txt"
+          tizen build-web -e ".*" -e gulpfile.js -e README.md -e "node_modules/*" -e "package*.json" -e "yarn.lock"
           tizen package -t wgt -o . -- .buildResult -s jellyfin
       - name: Failure
         if: failure()
